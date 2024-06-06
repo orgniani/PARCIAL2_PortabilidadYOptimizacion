@@ -3,6 +3,7 @@ using UnityEngine.Advertisements;
 
 public class BannerAdManager : AdManager
 {
+    [Header("Unit IDs")]
     [SerializeField] private string bannerAndroidAdUnitId = "Banner_Android";
     [SerializeField] private string bannerIOSAdUnitId = "Banner_iOS";
 

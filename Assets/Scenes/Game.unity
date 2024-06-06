@@ -1615,7 +1615,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rewardedAndroidAdUnitId: Rewarded_Android
   rewardedIOSAdUnitId: Rewarded_iOS
-  gameManager: {fileID: 1424775790}
+  extraTimeRewarded: 2
 --- !u!114 &1091429276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1777,8 +1777,9 @@ MonoBehaviour:
   instructionText: {fileID: 145564139}
   creditsCanvas: {fileID: 959725034}
   clickerButton: {fileID: 1431570045}
-  medalButton: {fileID: 701728056}
   trophyButton: {fileID: 440590008}
+  interstitialAd: {fileID: 1091429276}
+  rewardedAd: {fileID: 1091429275}
   countdownTime: 10
   waitToRestart: 2
 --- !u!4 &1424775791

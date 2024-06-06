@@ -17,28 +17,123 @@ public class GameManager : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private Button clickerButton;
-    [SerializeField] private GameObject medalButton;
     [SerializeField] private GameObject trophyButton;
 
+    [Header("Ads")]
+    [SerializeField] private InterstitialAdManager interstitialAd;
+    [SerializeField] private RewardedAdManager rewardedAd;
+
     [Header("Parameters")]
-    [SerializeField] private float countdownTime = 10f;
+    [SerializeField] private float initialCountdownTime = 10f;
     [SerializeField] private float waitToRestart = 2f;
+
+    private float countdownTime = 0f;
 
     private int clicksCounter = 0;
     private int highScore = 0;
 
-    private bool gameOver = false;
     private bool gameStart = false;
+    private bool gameOver = false;
 
     private const string HighScoreKey = "HighScore";
+
+    private void Awake()
+    {
+        if (!clickCounterText)
+        {
+            Debug.LogError($"{name}: {nameof(clickCounterText)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!timerText)
+        {
+            Debug.LogError($"{name}: {nameof(timerText)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+
+        if (!highScoreText)
+        {
+            Debug.LogError($"{name}: {nameof(highScoreText)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!instructionText)
+        {
+            Debug.LogError($"{name}: {nameof(instructionText)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!creditsCanvas)
+        {
+            Debug.LogError($"{name}: {nameof(creditsCanvas)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!clickerButton)
+        {
+            Debug.LogError($"{name}: {nameof(clickerButton)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!trophyButton)
+        {
+            Debug.LogError($"{name}: {nameof(trophyButton)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!interstitialAd)
+        {
+            Debug.LogError($"{name}: {nameof(interstitialAd)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!rewardedAd)
+        {
+            Debug.LogError($"{name}: {nameof(rewardedAd)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        trophyButton.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        rewardedAd.OnRewardedAdCompleted += HandleRewardedAdCompleted;
+    }
+
+    private void OnDisable()
+    {
+        rewardedAd.OnRewardedAdCompleted -= HandleRewardedAdCompleted;
+    }
 
     private void Start()
     {
         highScore = PlayerPrefs.GetInt(HighScoreKey, 0);
         highScoreText.text = "High Score: " + highScore.ToString("D2");
 
+        countdownTime = initialCountdownTime;
+        UpdateTimeText(countdownTime);
+
 #if UNITY_ANDROID
-    medalButton.SetActive(true);
     trophyButton.SetActive(true);
 #endif
     }
@@ -48,7 +143,7 @@ public class GameManager : MonoBehaviour
         if (gameOver) return;
 
         clicksCounter++;
-        clickCounterText.text = clicksCounter.ToString("D2") + " clicks";
+        UpdateClicksText();
 
         if (gameStart) return;
 
@@ -81,26 +176,36 @@ public class GameManager : MonoBehaviour
         {
             timer -= Time.deltaTime;
 
-            int seconds = Mathf.FloorToInt(timer);
-            int milliseconds = Mathf.FloorToInt((timer - seconds) * 100);
-            timerText.text = $"Tiempo: {seconds:D2}:{milliseconds:D2}";
+            UpdateTimeText(timer);
 
             yield return null;
         }
 
-        timerText.text = "Tiempo: 00:00";
+        UpdateTimeText(0f);
 
         clickerButton.interactable = false;
 
         gameOver = true;
-        SaveHighScore();
+        CheckIfHighScore();
 
         yield return new WaitForSeconds(waitToRestart);
 
         ResetGame();
     }
 
-    private void SaveHighScore()
+    private void UpdateTimeText(float timer)
+    {
+        int seconds = Mathf.FloorToInt(timer);
+        int milliseconds = Mathf.FloorToInt((timer - seconds) * 100);
+        timerText.text = $"Tiempo: {seconds:D2}:{milliseconds:D2}";
+    }
+
+    private void UpdateClicksText()
+    {
+        clickCounterText.text = clicksCounter.ToString("D2") + " clicks";
+    }
+
+    private void CheckIfHighScore()
     {
         if (clicksCounter > highScore)
         {
@@ -108,6 +213,13 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.Save();
             highScoreText.text = "High Score: " + clicksCounter.ToString("D2");
         }
+
+        else ShowAd();
+    }
+
+    private void ShowAd()
+    {
+        interstitialAd.ShowInterstitial();
     }
 
     private void ResetGame()
@@ -119,7 +231,21 @@ public class GameManager : MonoBehaviour
         clickerButton.interactable = true;
 
         clicksCounter = 0;
+        UpdateClicksText();
 
+        rewardedAd.ResetButton();
+        ResetCountdownTime();
+    }
 
+    private void ResetCountdownTime()
+    {
+        countdownTime = initialCountdownTime;
+        UpdateTimeText(countdownTime);
+    }
+
+    private void HandleRewardedAdCompleted(float extraTime)
+    {
+        countdownTime += extraTime;
+        UpdateTimeText(countdownTime);
     }
 }

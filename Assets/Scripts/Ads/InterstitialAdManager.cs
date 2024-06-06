@@ -3,6 +3,7 @@ using UnityEngine.Advertisements;
 
 public class InterstitialAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShowListener
 {
+    [Header("Unit IDs")]
     [SerializeField] private string interstitialAndroidAdUnitId = "Interstitial_Android";
     [SerializeField] private string interstitialIOSAdUnitId = "Interstitial_iOS";
 
@@ -30,6 +31,12 @@ public class InterstitialAdManager : AdManager, IUnityAdsLoadListener, IUnityAds
         Advertisement.Load(adUnitId, this);
     }
 
+    public void ShowInterstitial()
+    {
+        if (adLoaded)
+            Advertisement.Show(adUnitId, this);
+    }
+
     public void OnUnityAdsAdLoaded(string placementId)
     {
         adLoaded = true;
@@ -54,9 +61,6 @@ public class InterstitialAdManager : AdManager, IUnityAdsLoadListener, IUnityAds
     public void OnUnityAdsShowClick(string placementId)
     {
         Debug.Log("Interstitial clicked successfully");
-
-        if (adLoaded)
-            Advertisement.Show(adUnitId, this);
     }
 
     public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)

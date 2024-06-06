@@ -9,7 +9,7 @@ public abstract class AdManager : MonoBehaviour, IUnityAdsInitializationListener
 
     protected bool adLoaded = false;
 
-    public static event Action OnUnityAdsInitialized;
+    protected static event Action OnUnityAdsInitialized;
 
     private void Awake()
     {

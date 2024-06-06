@@ -1,12 +1,18 @@
+using System;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
 public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShowListener
 {
+    [Header("Unit IDs")]
     [SerializeField] private string rewardedAndroidAdUnitId = "Rewarded_Android";
     [SerializeField] private string rewardedIOSAdUnitId = "Rewarded_iOS";
 
-    [SerializeField] private GameManager gameManager;
+    [Header("Reward")]
+    [SerializeField] private float extraTimeRewarded = 2f;
+    private bool buttonPressedOnce = false;
+
+    public event Action<float> OnRewardedAdCompleted;
 
     private void OnEnable()
     {
@@ -55,6 +61,8 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
 
     public void OnUnityAdsShowClick(string placementId)
     {
+        if (buttonPressedOnce) return;
+
         Debug.Log("Rewarded Ad clicked successfully");
 
         if (adLoaded)
@@ -66,7 +74,14 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
         if (placementId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
             Debug.Log("EXTRA TIME!");
-            //gameManager.AddTimeFromReward();
+            buttonPressedOnce = true;
+
+            OnRewardedAdCompleted?.Invoke(extraTimeRewarded);
         }
+    }
+
+    public void ResetButton()
+    {
+        buttonPressedOnce = false;
     }
 }
