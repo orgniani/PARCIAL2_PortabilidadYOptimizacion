@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private Button clickerButton;
+    [SerializeField] private GameObject medalButton;
+    [SerializeField] private GameObject trophyButton;
 
     [Header("Parameters")]
     [SerializeField] private float countdownTime = 10f;
@@ -34,6 +36,11 @@ public class GameManager : MonoBehaviour
     {
         highScore = PlayerPrefs.GetInt(HighScoreKey, 0);
         highScoreText.text = "High Score: " + highScore.ToString("D2");
+
+#if UNITY_ANDROID
+    medalButton.SetActive(true);
+    trophyButton.SetActive(true);
+#endif
     }
 
     public void OnClick()
