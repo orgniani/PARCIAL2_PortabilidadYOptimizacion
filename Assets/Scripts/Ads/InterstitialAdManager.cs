@@ -10,11 +10,13 @@ public class InterstitialAdManager : AdManager, IUnityAdsLoadListener, IUnityAds
     private void OnEnable()
     {
         OnUnityAdsInitialized += InitializeInterstitial;
+        gameManager.OnShowAd += ShowInterstitial;
     }
 
     private void OnDisable()
     {
         OnUnityAdsInitialized -= InitializeInterstitial;
+        gameManager.OnShowAd -= ShowInterstitial;
     }
 
     protected override void SetIDs()
@@ -40,31 +42,31 @@ public class InterstitialAdManager : AdManager, IUnityAdsLoadListener, IUnityAds
     public void OnUnityAdsAdLoaded(string placementId)
     {
         adLoaded = true;
-        Debug.Log("Interstitial Ad loaded successfully");
+        if (enableLogs) Debug.Log("Interstitial Ad loaded successfully");
     }
 
     public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
     {
-        Debug.Log($"Interstitial: Error loading Ad Unit: {adUnitId} - {error.ToString()} - {message}");
+        if (enableLogs) Debug.Log($"Interstitial: Error loading Ad Unit: {adUnitId} - {error.ToString()} - {message}");
     }
 
     public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
     {
-        Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
+        if (enableLogs) Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
     }
 
     public void OnUnityAdsShowStart(string placementId)
     {
-        Debug.Log("Interstitial showing successfully");
+        if (enableLogs) Debug.Log("Interstitial showing successfully");
     }
 
     public void OnUnityAdsShowClick(string placementId)
     {
-        Debug.Log("Interstitial clicked successfully");
+        if (enableLogs) Debug.Log("Interstitial clicked successfully");
     }
 
     public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
     {
-        Debug.Log("Interstitial fully watched");
+        if (enableLogs) Debug.Log("Interstitial fully watched");
     }
 }

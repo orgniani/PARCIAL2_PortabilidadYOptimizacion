@@ -339,8 +339,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1424775790}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 1424775792}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: OnOpenAndCloseCredits
         m_Mode: 1
         m_Arguments:
@@ -1566,7 +1566,7 @@ GameObject:
   - component: {fileID: 1091429276}
   - component: {fileID: 1091429275}
   m_Layer: 0
-  m_Name: AdsManager
+  m_Name: Ads
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1599,6 +1599,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e727c868715bf714880ef11ca69684c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1424775790}
+  enableLogs: 0
   bannerAndroidAdUnitId: Banner_Android
   bannerIOSAdUnitId: Banner_iOS
 --- !u!114 &1091429275
@@ -1613,6 +1615,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 215e733e6927eb74e9ab62a62b5a3004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1424775790}
+  enableLogs: 0
   rewardedAndroidAdUnitId: Rewarded_Android
   rewardedIOSAdUnitId: Rewarded_iOS
   extraTimeRewarded: 2
@@ -1628,6 +1632,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd97c9e7b030db4ebb6252506c79901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1424775790}
+  enableLogs: 0
   interstitialAndroidAdUnitId: Interstitial_Android
   interstitialIOSAdUnitId: Interstitial_iOS
 --- !u!1 &1155516707
@@ -1752,8 +1758,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1424775791}
   - component: {fileID: 1424775790}
+  - component: {fileID: 1424775792}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1771,17 +1778,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bd35a265df15744a9f528cce8f9057b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickCounterText: {fileID: 768150478}
-  timerText: {fileID: 52011893}
-  highScoreText: {fileID: 858444619}
-  instructionText: {fileID: 145564139}
-  creditsCanvas: {fileID: 959725034}
-  clickerButton: {fileID: 1431570045}
-  trophyButton: {fileID: 440590008}
-  interstitialAd: {fileID: 1091429276}
-  rewardedAd: {fileID: 1091429275}
-  countdownTime: 10
-  waitToRestart: 2
+  initialCountdownTime: 3
+  waitToRestart: 1
 --- !u!4 &1424775791
 Transform:
   m_ObjectHideFlags: 0
@@ -1797,6 +1795,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1424775792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424775789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 577fecf4d40655a4ea4a5b50d5eedb10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickCounterText: {fileID: 768150478}
+  timerText: {fileID: 52011893}
+  highScoreText: {fileID: 858444619}
+  instructionText: {fileID: 145564139}
+  creditsCanvas: {fileID: 959725034}
+  clickerButton: {fileID: 1431570045}
+  trophyButton: {fileID: 440590008}
 --- !u!1 &1431570043
 GameObject:
   m_ObjectHideFlags: 0
@@ -2086,8 +2103,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1424775790}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 1424775792}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: OnOpenAndCloseCredits
         m_Mode: 1
         m_Arguments:

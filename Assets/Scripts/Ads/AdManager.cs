@@ -4,15 +4,26 @@ using UnityEngine.Advertisements;
 
 public abstract class AdManager : MonoBehaviour, IUnityAdsInitializationListener
 {
-    private string gameId;
-    protected string adUnitId;
+    [SerializeField] protected GameManager gameManager;
+    [SerializeField] protected bool enableLogs = false;
 
+    private string gameId;
+
+    protected string adUnitId;
     protected bool adLoaded = false;
 
     protected static event Action OnUnityAdsInitialized;
 
     private void Awake()
     {
+        if (!gameManager)
+        {
+            Debug.LogError($"{name}: {nameof(gameManager)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
 #if UNITY_IOS
         gameId = "5629789";
 #elif UNITY_ANDROID
@@ -34,13 +45,13 @@ public abstract class AdManager : MonoBehaviour, IUnityAdsInitializationListener
 
     public void OnInitializationComplete()
     {
-        Debug.Log("Unity Ads initialization complete.");
+        if (enableLogs) Debug.Log("Unity Ads initialization complete.");
         OnUnityAdsInitialized?.Invoke();
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)
     {
-        Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
+        if (enableLogs) Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
     }
 
 

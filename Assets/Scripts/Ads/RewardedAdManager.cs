@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
@@ -10,18 +9,18 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
 
     [Header("Reward")]
     [SerializeField] private float extraTimeRewarded = 2f;
-    private bool buttonPressedOnce = true;
-
-    public event Action<float> OnRewardedAdCompleted;
+    private bool wasRewardGiven = false;
 
     private void OnEnable()
     {
         OnUnityAdsInitialized += InitializeRewardedAd;
+        gameManager.OnRestart += HandleRestartReward;
     }
 
     private void OnDisable()
     {
         OnUnityAdsInitialized -= InitializeRewardedAd;
+        gameManager.OnRestart -= HandleRestartReward;
     }
 
     protected override void SetIDs()
@@ -41,29 +40,29 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
     public void OnUnityAdsAdLoaded(string placementId)
     {
         adLoaded = true;
-        Debug.Log("Rewarded Ad loaded successfully");
+        if (enableLogs) Debug.Log("Rewarded Ad loaded successfully");
     }
 
     public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
     {
-        Debug.Log($"Rewarded Ad: Error loading Ad Unit: {adUnitId} - {error.ToString()} - {message}");
+        if (enableLogs) Debug.Log($"Rewarded Ad: Error loading Ad Unit: {adUnitId} - {error.ToString()} - {message}");
     }
 
     public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
     {
-        Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
+        if (enableLogs) Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
     }
 
     public void OnUnityAdsShowStart(string placementId)
     {
-        Debug.Log("Rewarded Ad showing successfully");
+        if (enableLogs) Debug.Log("Rewarded Ad showing successfully");
     }
 
     public void OnUnityAdsShowClick(string placementId)
     {
-        if (buttonPressedOnce) return;
+        if (gameManager.GameStart || wasRewardGiven) return;
 
-        Debug.Log("Rewarded Ad clicked successfully");
+        if (enableLogs) Debug.Log("Rewarded Ad clicked successfully");
 
         if (adLoaded)
             Advertisement.Show(adUnitId, this);
@@ -73,13 +72,13 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
     {
         if (placementId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
-            buttonPressedOnce = true;
-            OnRewardedAdCompleted?.Invoke(extraTimeRewarded);
+            wasRewardGiven = true;
+            gameManager.RewardExtraSeconds(extraTimeRewarded);
         }
     }
 
-    public void ResetButton()
+    private void HandleRestartReward()
     {
-        buttonPressedOnce = false;
+        wasRewardGiven = false;
     }
 }

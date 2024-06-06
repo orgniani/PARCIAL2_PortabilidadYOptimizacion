@@ -21,6 +21,65 @@ public class UIManager : MonoBehaviour
     public TMP_Text TimerText => timerText;
     public TMP_Text HighScoreText => highScoreText;
 
+    private void Awake()
+    {
+        if (!clickCounterText)
+        {
+            Debug.LogError($"{name}: {nameof(clickCounterText)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!timerText)
+        {
+            Debug.LogError($"{name}: {nameof(timerText)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!highScoreText)
+        {
+            Debug.LogError($"{name}: {nameof(highScoreText)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!instructionText)
+        {
+            Debug.LogError($"{name}: {nameof(instructionText)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!creditsCanvas)
+        {
+            Debug.LogError($"{name}: {nameof(creditsCanvas)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!clickerButton)
+        {
+            Debug.LogError($"{name}: {nameof(clickerButton)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+
+        if (!trophyButton)
+        {
+            Debug.LogError($"{name}: {nameof(trophyButton)} is null!" +
+                           $"\nDisabling object to avoid errors.");
+            enabled = false;
+            return;
+        }
+    }
+
     private void Start()
     {
         trophyButton.SetActive(false);
@@ -33,12 +92,6 @@ public class UIManager : MonoBehaviour
     public void ShowInstructionText(bool show)
     {
         instructionText.SetActive(show);
-    }
-
-    public void ShowCreditsCanvas(bool show)
-    {
-        creditsCanvas.SetActive(show);
-        Time.timeScale = show ? 0 : 1;
     }
 
     public void EnableButton(bool enable)

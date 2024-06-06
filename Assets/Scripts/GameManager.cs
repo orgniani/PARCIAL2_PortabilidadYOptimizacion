@@ -1,17 +1,12 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Ads")]
-    [SerializeField] private AdManager adManager;
-
     [Header("Parameters")]
     [SerializeField] private float initialCountdownTime = 10f;
     [SerializeField] private float waitToRestart = 2f;
-
-    private bool gameStart = false;
-    private bool gameOver = false;
 
     private ITimer timer;
     private IClicksHandler clicksHandler;
@@ -19,8 +14,10 @@ public class GameManager : MonoBehaviour
 
     private UIManager uiManager;
 
-    private InterstitialAdManager interstitialAd;
-    private RewardedAdManager rewardedAd;
+    public event Action OnShowAd;
+    public event Action OnRestart;
+
+    public bool GameStart { get; private set; }
 
     private void Awake()
     {
@@ -30,38 +27,24 @@ public class GameManager : MonoBehaviour
         clicksHandler = new ClicksHandler(uiManager.ClickCounterText);
         highScoreManager = new HighScoreManager(uiManager.HighScoreText);
 
-        interstitialAd = adManager.GetComponent<InterstitialAdManager>();
-        rewardedAd = adManager.GetComponent<RewardedAdManager>();
-    }
-
-    private void OnEnable()
-    {
-        rewardedAd.OnRewardedAdCompleted += HandleRewardExtraSeconds;
-    }
-
-    private void OnDisable()
-    {
-        rewardedAd.OnRewardedAdCompleted -= HandleRewardExtraSeconds;
+        GameStart = false;
     }
 
     public void OnClick()
     {
-        if (gameOver) return;
-
         clicksHandler.OnClick();
 
-        if (gameStart) return;
+        if (GameStart) return;
 
         uiManager.ShowInstructionText(false);
         timer.StartTimer(OnTimerComplete);
 
-        gameStart = true;
+        GameStart = true;
     }
 
     private void OnTimerComplete()
     {
         uiManager.EnableButton(false);
-        gameOver = true;
         CheckIfHighScore();
 
         StartCoroutine(RestartAfterDelay());
@@ -75,18 +58,12 @@ public class GameManager : MonoBehaviour
 
     private void CheckIfHighScore()
     {
-        if (!highScoreManager.IsHighScore(clicksHandler.GetClicksCount())) ShowAd();
-    }
-
-    private void ShowAd()
-    {
-        interstitialAd.ShowInterstitial();
+        if (!highScoreManager.IsHighScore(clicksHandler.GetClicksCount())) OnShowAd?.Invoke();
     }
 
     private void ResetGame()
     {
-        gameStart = false;
-        gameOver = false;
+        GameStart = false;
 
         uiManager.ShowInstructionText(true);
         uiManager.EnableButton(true);
@@ -94,10 +71,10 @@ public class GameManager : MonoBehaviour
         clicksHandler.ResetClicks();
         timer.ResetTimer(initialCountdownTime);
 
-        rewardedAd.ResetButton();
+        OnRestart?.Invoke();
     }
 
-    private void HandleRewardExtraSeconds(float extraSeconds)
+    public void RewardExtraSeconds(float extraSeconds)
     {
         timer.AddExtraSeconds(extraSeconds);
     }

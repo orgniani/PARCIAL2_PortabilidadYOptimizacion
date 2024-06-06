@@ -40,12 +40,12 @@ public class BannerAdManager : AdManager
 
     private void OnBannerLoaded()
     {
-        Debug.Log("Banner loaded successfully");
+        if (enableLogs) Debug.Log("Banner loaded successfully");
         Advertisement.Banner.Show(adUnitId);
     }
 
     private void OnBannerError(string message)
     {
-        Debug.Log($"Banner Error: {message}");
+        if (enableLogs) Debug.Log($"Banner Error: {message}");
     }
 }
