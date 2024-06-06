@@ -10,7 +10,7 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
 
     [Header("Reward")]
     [SerializeField] private float extraTimeRewarded = 2f;
-    private bool buttonPressedOnce = false;
+    private bool buttonPressedOnce = true;
 
     public event Action<float> OnRewardedAdCompleted;
 
@@ -73,9 +73,7 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
     {
         if (placementId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
-            Debug.Log("EXTRA TIME!");
             buttonPressedOnce = true;
-
             OnRewardedAdCompleted?.Invoke(extraTimeRewarded);
         }
     }

@@ -1,22 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class HighScoreManager : MonoBehaviour
+public class HighScoreManager : IHighScoreManager
 {
     private const string HighScoreKey = "HighScore";
+    private TMP_Text highScoreText;
+    private int highScore;
+
+    public HighScoreManager(TMP_Text highScoreText)
+    {
+        highScore = PlayerPrefs.GetInt(HighScoreKey, 0);
+        this.highScoreText = highScoreText;
+
+        UpdateHighScoreText(highScore);
+    }
 
     public int GetHighScore()
     {
-        return PlayerPrefs.GetInt(HighScoreKey, 0);
+        return highScore;
     }
 
-    public void CheckAndSetHighScore(int score)
+    private void SetHighScore()
     {
-        if (score > GetHighScore())
+        PlayerPrefs.SetInt(HighScoreKey, highScore);
+        PlayerPrefs.Save();
+
+        UpdateHighScoreText(highScore);
+    }
+
+    public bool IsHighScore(int score)
+    {
+        if (score > highScore)
         {
-            PlayerPrefs.SetInt(HighScoreKey, score);
-            PlayerPrefs.Save();
+            highScore = score;
+            SetHighScore();
+            return true;
         }
+
+        else return false;
+    }
+
+    private void UpdateHighScoreText(int newHighScore)
+    {
+        highScoreText.text = "High Score: " + newHighScore.ToString("D2");
     }
 }
