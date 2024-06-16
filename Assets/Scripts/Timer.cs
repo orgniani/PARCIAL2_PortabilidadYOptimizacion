@@ -54,7 +54,7 @@ public class Timer : ITimer
     {
         int seconds = Mathf.FloorToInt(timer);
         int milliseconds = Mathf.FloorToInt((timer - seconds) * 100);
-        timerText.text = $"Time: {seconds:D2}:{milliseconds:D2}";
+        timerText.text = $"{seconds:D2}:{milliseconds:D2}";
     }
 
     public void AddExtraSeconds(float extraSeconds)
