@@ -42,7 +42,7 @@ public class InterstitialAdManager : AdManager, IUnityAdsLoadListener, IUnityAds
     public void OnUnityAdsAdLoaded(string placementId)
     {
         adLoaded = true;
-        if (enableLogs) Debug.Log("Interstitial Ad loaded successfully");
+        if (enableLogs) Debug.Log("---------------------- DEBUG LOG ---------------------- Interstitial Ad loaded successfully");
     }
 
     public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
@@ -68,5 +68,6 @@ public class InterstitialAdManager : AdManager, IUnityAdsLoadListener, IUnityAds
     public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
     {
         if (enableLogs) Debug.Log("Interstitial fully watched");
+        Advertisement.Load(adUnitId, this);
     }
 }

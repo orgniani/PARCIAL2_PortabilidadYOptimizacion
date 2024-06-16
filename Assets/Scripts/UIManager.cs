@@ -12,10 +12,13 @@ public class UIManager : MonoBehaviour
     [Header("Objects")]
     [SerializeField] private GameObject instructionText;
     [SerializeField] private GameObject creditsCanvas;
+    [SerializeField] private GameObject rewardCanvas;
 
     [Header("Buttons")]
     [SerializeField] private Button clickerButton;
     [SerializeField] private GameObject trophyButton;
+
+    private bool rewardCanvasOpened = false;
 
     public TMP_Text ClickCounterText => clickCounterText;
     public TMP_Text TimerText => timerText;
@@ -83,6 +86,8 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         trophyButton.SetActive(false);
+        creditsCanvas.SetActive(false);
+        rewardCanvas.SetActive(false);
 
 #if UNITY_ANDROID
         trophyButton.SetActive(true);
@@ -99,6 +104,7 @@ public class UIManager : MonoBehaviour
         clickerButton.interactable = enable;
     }
 
+    //Credits Button
     public void OnOpenAndCloseCredits()
     {
         if (creditsCanvas.activeSelf)
@@ -112,5 +118,25 @@ public class UIManager : MonoBehaviour
             creditsCanvas.SetActive(true);
             Time.timeScale = 0;
         }
+    }
+
+    //Trophy Button
+    public void OnOpenAndCloseReward(GameManager gameManager)
+    {
+        if (!gameManager.GameStart && !rewardCanvasOpened)
+        {
+            rewardCanvasOpened = true;
+            rewardCanvas.SetActive(true);
+        }
+
+        else
+        {
+            rewardCanvas.SetActive(false);
+        }
+    }
+
+    public void ResetRewardCanvas()
+    {
+        rewardCanvasOpened = false;
     }
 }

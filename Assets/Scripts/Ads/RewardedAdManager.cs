@@ -9,18 +9,15 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
 
     [Header("Reward")]
     [SerializeField] private float extraTimeRewarded = 2f;
-    private bool wasRewardGiven = false;
 
     private void OnEnable()
     {
         OnUnityAdsInitialized += InitializeRewardedAd;
-        gameManager.OnRestart += HandleRestartReward;
     }
 
     private void OnDisable()
     {
         OnUnityAdsInitialized -= InitializeRewardedAd;
-        gameManager.OnRestart -= HandleRestartReward;
     }
 
     protected override void SetIDs()
@@ -40,7 +37,7 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
     public void OnUnityAdsAdLoaded(string placementId)
     {
         adLoaded = true;
-        if (enableLogs) Debug.Log("Rewarded Ad loaded successfully");
+        if (enableLogs) Debug.Log("---------------------- DEBUG LOG ---------------------- Rewarded Ad loaded successfully");
     }
 
     public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
@@ -60,8 +57,6 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
 
     public void OnUnityAdsShowClick(string placementId)
     {
-        if (gameManager.GameStart || wasRewardGiven) return;
-
         if (enableLogs) Debug.Log("Rewarded Ad clicked successfully");
 
         if (adLoaded)
@@ -71,14 +66,8 @@ public class RewardedAdManager : AdManager, IUnityAdsLoadListener, IUnityAdsShow
     public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
     {
         if (placementId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
-        {
-            wasRewardGiven = true;
             gameManager.RewardExtraSeconds(extraTimeRewarded);
-        }
-    }
 
-    private void HandleRestartReward()
-    {
-        wasRewardGiven = false;
+        Advertisement.Load(adUnitId, this);
     }
 }

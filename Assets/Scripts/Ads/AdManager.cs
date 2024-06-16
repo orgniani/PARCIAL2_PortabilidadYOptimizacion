@@ -45,7 +45,7 @@ public abstract class AdManager : MonoBehaviour, IUnityAdsInitializationListener
 
     public void OnInitializationComplete()
     {
-        if (enableLogs) Debug.Log("Unity Ads initialization complete.");
+        if (enableLogs) Debug.Log("---------------------- DEBUG LOG ---------------------- Unity Ads initialization complete.");
         OnUnityAdsInitialized?.Invoke();
     }
 

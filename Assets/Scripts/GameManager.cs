@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
     private UIManager uiManager;
 
     public event Action OnShowAd;
-    public event Action OnRestart;
 
     public bool GameStart { get; private set; }
 
@@ -71,7 +70,7 @@ public class GameManager : MonoBehaviour
         clicksHandler.ResetClicks();
         timer.ResetTimer(initialCountdownTime);
 
-        OnRestart?.Invoke();
+        uiManager.ResetRewardCanvas();
     }
 
     public void RewardExtraSeconds(float extraSeconds)
