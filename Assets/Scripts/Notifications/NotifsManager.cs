@@ -7,7 +7,8 @@ using Unity.Notifications.Android;
 
 public class NotifsManager : MonoBehaviour
 {
-    private const string CHANNEL_ID = "notification";
+    private const string GROUP_ID = "Main";
+    private const string CHANNEL_ID = "Notification";
 
     private void Start()
     {
@@ -15,7 +16,7 @@ public class NotifsManager : MonoBehaviour
         {
             var group = new AndroidNotificationChannelGroup()
             {
-                Id = "Main",
+                Id = GROUP_ID,
                 Name = "Main notifications"
             };
 
@@ -27,7 +28,7 @@ public class NotifsManager : MonoBehaviour
                 Name = "All notifications",
                 Importance = Importance.Default,
                 Description = "all of the game's notifications",
-                Group = "Main"
+                Group = GROUP_ID
             };
 
             AndroidNotificationCenter.RegisterNotificationChannel(channel);

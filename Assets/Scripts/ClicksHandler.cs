@@ -25,6 +25,9 @@ public class ClicksHandler : IClicksHandler
     private void UpdateClicksText()
     {
         clickCounterText.text = clicksCounter.ToString("D2") + " clicks";
+#if UNITY_ANDROID
+        clickCounterText.text = clicksCounter.ToString("D2") + " taps";
+#endif
     }
 
     public int GetClicksCount()

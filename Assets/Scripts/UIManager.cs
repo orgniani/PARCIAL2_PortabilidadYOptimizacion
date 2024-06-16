@@ -8,9 +8,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text clickCounterText;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private TMP_Text highScoreText;
+    [SerializeField] private TMP_Text instructionText;
 
     [Header("Objects")]
-    [SerializeField] private GameObject instructionText;
     [SerializeField] private GameObject creditsCanvas;
     [SerializeField] private GameObject rewardCanvas;
 
@@ -91,12 +91,14 @@ public class UIManager : MonoBehaviour
 
 #if UNITY_ANDROID
         trophyButton.SetActive(true);
+        instructionText.text = "tap the button to start!";
+        clickCounterText.text = "00 taps";
 #endif
     }
 
     public void ShowInstructionText(bool show)
     {
-        instructionText.SetActive(show);
+        instructionText.gameObject.SetActive(show);
     }
 
     public void EnableButton(bool enable)
