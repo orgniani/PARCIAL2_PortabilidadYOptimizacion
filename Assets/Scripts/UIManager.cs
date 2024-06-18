@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button clickerButton;
     [SerializeField] private GameObject trophyButton;
 
-    private bool rewardCanvasOpened = false;
+    private bool hasWatchedRewardedAd = false;
 
     public TMP_Text ClickCounterText => clickCounterText;
     public TMP_Text TimerText => timerText;
@@ -107,38 +107,41 @@ public class UIManager : MonoBehaviour
     }
 
     //Credits Button
-    public void OnOpenAndCloseCredits()
+    public void OnOpenAndCloseCredits(GameManager gameManager)
     {
-        if (creditsCanvas.activeSelf)
-        {
-            creditsCanvas.SetActive(false);
-            Time.timeScale = 1;
-        }
+        if (gameManager.GameStart) return;
 
-        else
-        {
-            creditsCanvas.SetActive(true);
-            Time.timeScale = 0;
-        }
+        OnOpenAndCloseCanvas(creditsCanvas);
     }
 
     //Trophy Button
     public void OnOpenAndCloseReward(GameManager gameManager)
     {
-        if (!gameManager.GameStart && !rewardCanvasOpened)
-        {
-            rewardCanvasOpened = true;
-            rewardCanvas.SetActive(true);
-        }
+        if (gameManager.GameStart || hasWatchedRewardedAd) return;
 
-        else
-        {
-            rewardCanvas.SetActive(false);
-        }
+        OnOpenAndCloseCanvas(rewardCanvas);
+    }
+
+    public void OnChooseToWatchAd()
+    {
+        hasWatchedRewardedAd = true;
     }
 
     public void ResetRewardCanvas()
     {
-        rewardCanvasOpened = false;
+        hasWatchedRewardedAd = false;
+    }
+
+    private void OnOpenAndCloseCanvas(GameObject canvas)
+    {
+        if (canvas.activeSelf)
+        {
+            canvas.SetActive(false);
+        }
+
+        else
+        {
+            canvas.SetActive(true);
+        }
     }
 }

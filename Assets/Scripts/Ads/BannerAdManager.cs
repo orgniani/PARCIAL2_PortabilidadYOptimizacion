@@ -50,4 +50,15 @@ public class BannerAdManager : AdManager
         if (enableLogs) Debug.Log($"Banner Error: {message}");
         adLoaded = false;
     }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (!adLoaded) return;
+
+        Debug.Log($"OnApplicationPause: {pause}");
+
+        if (pause) Advertisement.Banner.Hide();
+
+        else Advertisement.Banner.Show(adUnitId);
+    }
 }
